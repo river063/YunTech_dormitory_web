@@ -294,8 +294,8 @@
     });
 
     function parseScheduleDay(value) {
-      const text = value.trim().toLowerCase();
-      const day = text.match(/週?([日一二三四五六])/);
+      const text = value.trim().toLowerCase().replace(/星期|週/g, '');
+      const day = text.match(/^([日一二三四五六])/);
       if (day) return ['日', '一', '二', '三', '四', '五', '六'].indexOf(day[1]);
       const englishDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].findIndex((name) => text.startsWith(name));
       if (englishDay >= 0) return englishDay;
