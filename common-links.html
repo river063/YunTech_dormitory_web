@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="宿舍常用網站連結。">
+  <title>常用網站連結 - 宿舍生活資訊</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="logo" href="index.html">宿舍生活資訊</a>
+      <div class="topbar-actions">
+        <a class="today" href="index.html">← 回到首頁</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切換夜間模式">夜間</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container office-page common-links-page" id="top">
+    <section class="intro">
+      <p class="label">COMMON LINKS</p>
+      <h1>常用網站連結</h1>
+      <p>請選擇要前往的網站。</p>
+    </section>
+
+    <section class="link-group" aria-labelledby="school-links-title">
+      <h2 id="school-links-title">學校服務</h2>
+      <div class="placeholder-links">
+        <a href="https://webapp.yuntech.edu.tw/newstud/" target="_blank" rel="noopener noreferrer"><strong>YunTech 新生入學服務網</strong></a>
+        <a href="https://webapp.yuntech.edu.tw/YunTechSSO" target="_blank" rel="noopener noreferrer"><strong>YunTech 單一入口服務網</strong></a>
+        <a href="https://yunnet.yuntech.edu.tw/" target="_blank" rel="noopener noreferrer"><strong>YunTech 網管</strong></a>
+        <a href="https://eclass.yuntech.edu.tw/#/" target="_blank" rel="noopener noreferrer"><strong>YunTech TronClass</strong></a>
+        <a href="https://www.lib.yuntech.edu.tw/wSite/mp" target="_blank" rel="noopener noreferrer"><strong>YunTech 圖書館</strong></a>
+      </div>
+    </section>
+
+    <section class="link-group" aria-labelledby="dorm-links-title">
+      <h2 id="dorm-links-title">宿舍生活</h2>
+      <div class="placeholder-links">
+        <a href="https://sdc.yuntech.edu.tw/" target="_blank" rel="noopener noreferrer"><strong>宿舍生活點滴網</strong></a>
+        <a href="https://route.uy-iot.ai/artemis/monitor/WbEyR" target="_blank" rel="noopener noreferrer"><strong>YunTech C棟洗衣機狀況</strong></a>
+      </div>
+    </section>
+
+    <section class="link-group" aria-labelledby="food-shopping-links-title">
+      <h2 id="food-shopping-links-title">餐飲購物</h2>
+      <div class="placeholder-links">
+        <a href="https://www.yuntech.edu.tw/index.php/2019-04-02-07-22-58/1/2019-04-02-08-18-11" target="_blank" rel="noopener noreferrer"><strong>雲科餐飲購物</strong></a>
+      </div>
+    </section>
+
+    <section class="link-group" aria-labelledby="life-links-title">
+      <h2 id="life-links-title">生活工具</h2>
+      <div class="placeholder-links">
+        <a href="YunTech_food/index.html" target="_blank" rel="noopener noreferrer"><strong>YunTech 美食轉盤</strong></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">宿舍生活資訊 · 請依實際公告更新</footer>
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    function updateThemeButton() {
+      const isNight = document.body.classList.contains('night-mode');
+      themeToggle.textContent = isNight ? '日間' : '夜間';
+      themeToggle.setAttribute('aria-label', isNight ? '切換日間模式' : '切換夜間模式');
+    }
+    if (localStorage.getItem('dorm-theme') === 'night') document.body.classList.add('night-mode');
+    updateThemeButton();
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('night-mode');
+      localStorage.setItem('dorm-theme', document.body.classList.contains('night-mode') ? 'night' : 'day');
+      updateThemeButton();
+    });
+  </script>
+</body>
+</html>
