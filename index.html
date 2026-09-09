@@ -190,10 +190,12 @@
     });
 
     const trafficTotal = document.getElementById('traffic-total');
-    const trafficApi = 'http://127.0.0.1:8765/traffic';
+    const trafficApi = location.hostname.endsWith('github.io')
+      ? './traffic.json'
+      : 'http://127.0.0.1:8765/traffic';
     async function updateTrafficMonitor() {
       try {
-        const response = await fetch(trafficApi, { cache: 'no-store' });
+        const response = await fetch(`${trafficApi}?t=${Date.now()}`, { cache: 'no-store' });
         if (!response.ok) throw new Error('API unavailable');
         const data = await response.json();
         if (!data.ok) throw new Error(data.error);
