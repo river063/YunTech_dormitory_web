@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美食天降轉盤 🎡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --surface2: #16213e;
+            --border: rgba(255,255,255,0.08);
+            --accent: #f97316;
+            --accent2: #fb923c;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --pill-bg: rgba(249,115,22,0.12);
+            --pill-active: #f97316;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Stars bg */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 60%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(2px 2px at 55% 85%, rgba(249,115,22,0.4) 0%, transparent 100%),
+                radial-gradient(2px 2px at 30% 5%, rgba(249,115,22,0.3) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1rem 4rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .header-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 30%, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Main layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Category Pills */
+        .pills-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .pill.active {
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(249,115,22,0.4);
+        }
+        .pill-all {
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        /* Count badge */
+        .count-display {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .count-display span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Recommend button */
+        .recommend-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.875rem;
+            border: 1px solid rgba(249,115,22,0.3);
+            background: rgba(249,115,22,0.08);
+            color: var(--accent);
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .recommend-btn:hover {
+            background: rgba(249,115,22,0.18);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* Wheel area */
+        .wheel-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        /* Glow ring around wheel */
+        .wheel-glow {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #f97316, #f59e0b, #84cc16, #06b6d4, #8b5cf6, #ec4899, #f97316);
+            opacity: 0;
+            filter: blur(16px);
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+        .wheel-wrapper.spinning .wheel-glow { opacity: 0.5; }
+
+        canvas {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            position: relative;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Pointer */
+        .wheel-pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        .wheel-pointer svg {
+            width: 32px;
+            height: 40px;
+        }
+
+        /* Spin button */
+        .spin-btn-wrap {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .spin-btn {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.15);
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 900;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow:
+                0 0 0 4px rgba(249,115,22,0.2),
+                0 8px 24px rgba(249,115,22,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 50%);
+        }
+        .spin-btn:hover:not(:disabled) {
+            transform: scale(1.06);
+            box-shadow:
+                0 0 0 4px rgba(249,115,22,0.3),
+                0 12px 32px rgba(249,115,22,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        .spin-btn:active:not(:disabled) {
+            transform: scale(0.94);
+        }
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Wheel spinning animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(249,115,22,0.2), 0 8px 24px rgba(249,115,22,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(249,115,22,0.3), 0 16px 40px rgba(249,115,22,0.7), inset 0 1px 0 rgba(255,255,255,0.3); }
+        }
+        .wheel-wrapper.spinning .spin-btn {
+            animation: pulse-glow 1s ease-in-out infinite;
+        }
+
+        /* Result card */
+        .result-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-card.has-result {
+            border-color: rgba(249,115,22,0.4);
+            box-shadow: 0 0 40px rgba(249,115,22,0.15);
+        }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #f97316, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .result-card.has-result::before { opacity: 1; }
+
+        .result-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .result-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        #result-name {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        #result-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .result-default {
+            color: var(--text-muted);
+        }
+
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(34,197,94,0.35);
+            transition: all 0.2s ease;
+        }
+        .map-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(34,197,94,0.5);
+        }
+        .map-btn.hidden { display: none; }
+
+        /* Embedded map */
+        .map-embed-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            animation: map-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .map-embed-card.visible { display: flex; }
+        @keyframes map-slide-in {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .map-embed-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .map-embed-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .map-open-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid rgba(249,115,22,0.3);
+            transition: all 0.2s;
+        }
+        .map-open-link:hover {
+            background: rgba(249,115,22,0.12);
+        }
+        .map-open-link.hidden { display: none; }
+        #mapIframe {
+            width: 100%;
+            height: 280px;
+            border: none;
+            display: block;
+        }
+        .map-loading {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            gap: 0.5rem;
+        }
+
+        /* Confetti burst */
+        @keyframes confetti-fall {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), 80px) rotate(var(--rot)); opacity: 0; }
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            pointer-events: none;
+            animation: confetti-fall 0.8s ease-out forwards;
+        }
+
+        /* Result bounce animation */
+        @keyframes result-bounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            60% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .result-card.animating #result-name {
+            animation: result-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 460px;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        .modal-overlay.open .modal {
+            transform: translateY(0) scale(1);
+        }
+        .modal h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-muted);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover {
+            background: rgba(255,255,255,0.15);
+            color: var(--text);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-group label .req { color: #f87171; }
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(249,115,22,0.2);
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.2); }
+        select.form-control option { background: #1a1a2e; }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        .btn-secondary {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+        .btn-primary {
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(249,115,22,0.35);
+            transition: all 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: rgba(255,255,255,0.2);
+            font-size: 0.75rem;
+        }
+
+        /* Loading state */
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .loading-dots span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            animation: dot-bounce 1.2s infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 480px) {
+            .page-wrapper { padding: 1.25rem 0.75rem 3rem; }
+            .card { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-badge">🍜 雲林美食地圖</div>
+        <h1>美食天降轉盤</h1>
+        <p>選擇困難症救星 · 轉出今日命定美食</p>
+    </header>
+
+    <!-- Main -->
+    <div class="main-grid">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="card">
+                <div class="card-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+                    選擇分類
+                </div>
+                <div id="pills-container" class="pills-wrap">
+                    <div class="loading-dots"><span></span><span></span><span></span></div>
+                </div>
+                <div class="count-display" id="count-display"></div>
+            </div>
+
+            <button class="recommend-btn" id="addRestaurantBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                推薦私藏餐廳
+            </button>
+        </aside>
+
+        <!-- Wheel + Result -->
+        <div class="wheel-area">
+            <div class="wheel-wrapper" id="wheelWrapper">
+                <div class="wheel-glow"></div>
+                <!-- Pointer -->
+                <div class="wheel-pointer">
+                    <svg viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <filter id="shadow">
+                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.6)"/>
+                        </filter>
+                        <path d="M16 38 L3 6 Q16 0 29 6 Z" fill="url(#ptr-grad)" filter="url(#shadow)"/>
+                        <defs>
+                            <linearGradient id="ptr-grad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#f97316"/>
+                                <stop offset="100%" stop-color="#dc2626"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="16" cy="6" r="4" fill="#fff" opacity="0.9"/>
+                    </svg>
+                </div>
+
+                <canvas id="wheelCanvas"></canvas>
+
+                <div class="spin-btn-wrap">
+                    <button id="spinButton" class="spin-btn">轉！</button>
+                </div>
+            </div>
+
+            <!-- Result card -->
+            <div class="result-card" id="resultCard">
+                <span class="result-emoji" id="result-emoji">🎡</span>
+                <div class="result-label" id="result-label">今天吃什麼？</div>
+                <div id="result-name" class="result-default">從左側勾選分類</div>
+                <div id="result-description" class="result-default">然後點擊「轉！」按鈕決定今日美食！</div>
+            </div>
+
+            <!-- Embedded map -->
+            <div class="map-embed-card" id="mapEmbedCard">
+                <div class="map-embed-header">
+                    <div class="map-embed-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                        附近地圖
+                    </div>
+                    <a id="mapOpenLink" href="#" target="_blank" rel="noopener noreferrer" class="map-open-link hidden">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        另開地圖
+                    </a>
+                </div>
+                <div class="map-loading" id="mapLoading">
+                    <div class="loading-dots"><span></span><span></span><span></span></div>
+                    載入地圖中…
+                </div>
+                <iframe id="mapIframe" style="display:none" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© <script>document.write(new Date().getFullYear())</script> YunlinFood · All Rights Reserved</p>
+    </footer>
+</div>
+
+<!-- Modal -->
+<div id="addRestaurantModal" class="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" id="cancelAddBtn">✕</button>
+        <h2>❤️ 推薦私藏餐廳</h2>
+        <form id="addRestaurantForm">
+            <div class="form-group">
+                <label>餐廳名稱 <span class="req">*</span></label>
+                <input type="text" id="restaurantName" name="restaurantName" required class="form-control" placeholder="e.g. 老謝牛肉麵">
+            </div>
+            <div class="form-group">
+                <label>美食分類 <span class="req">*</span></label>
+                <select id="restaurantCategory" name="restaurantCategory" required class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label>推薦理由</label>
+                <textarea id="restaurantDescription" name="restaurantDescription" rows="3" class="form-control" placeholder="這家的招牌是..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Google Maps 網址</label>
+                <input type="url" id="restaurantUrl" name="restaurantUrl" class="form-control" placeholder="https://maps.app.goo.gl/...">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancelAddBtn2">取消</button>
+                <button type="submit" class="btn-primary" id="submitBtn">送出推薦</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script src="restaurants-data.js"></script>
+    <script>
+// Category emojis
+const categoryEmoji = {
+    '麵食': '🍜', '牛肉麵': '🥩', '拉麵': '🍥', '羹麵': '🫕', '義大利麵': '🍝',
+    '鍋燒': '🔥', '飯食': '🍚', '燒臘': '🍖', '咖哩': '🍛', '雞肉飯': '🐔',
+    '健康餐': '🥗', '粥': '🍲', '餃子': '🥟', '火鍋': '🫕', '麻辣燙/關東煮/滷味': '🌶️',
+    '燒烤/炭烤/排餐': '🥩', '炸物/鹹酥雞': '🍗', '異國料理': '🌍',
+    '早餐/早午餐': '🌅', '宵夜': '🌙', '點心': '🍡', '蛋糕': '🎂', '飲料': '🧋'
+};
+
+// Wheel colors - rich, vibrant palette
+const COLORS = [
+    ['#f97316','#ea580c'], ['#3b82f6','#2563eb'], ['#22c55e','#16a34a'],
+    ['#f59e0b','#d97706'], ['#8b5cf6','#7c3aed'], ['#ec4899','#db2777'],
+    ['#06b6d4','#0891b2'], ['#84cc16','#65a30d'], ['#ef4444','#dc2626'],
+    ['#a855f7','#9333ea'], ['#14b8a6','#0d9488'], ['#f97316','#ea580c'],
+];
+
+const LOCAL_FOOD_DATA = {
+    '麵食': [{ name: '老地方乾麵', description: '香氣十足的在地乾麵。' }, { name: '阿明麵店', description: '簡單好吃的家常麵食。' }],
+    '牛肉麵': [{ name: '老謝牛肉麵', description: '湯頭濃郁，牛肉軟嫩。' }, { name: '阿國牛肉麵', description: '在地人喜愛的牛肉麵。' }],
+    '雞肉飯': [{ name: '北港雞肉飯', description: '雞肉鮮嫩，淋上香醇肉汁。' }],
+    '飯食': [{ name: '小館子', description: '適合日常用餐的家常飯食。' }],
+    '火鍋': [{ name: '暖心鍋物', description: '天冷時最適合來一鍋。' }],
+    '炸物/鹹酥雞': [{ name: '阿國鹹酥雞', description: '酥脆涮嘴的台式炸物。' }],
+    '早餐/早午餐': [{ name: '日安早午餐', description: '開啟一天的元氣早午餐。' }],
+    '飲料': [{ name: '雲林鮮奶茶', description: '茶香與奶香平衡順口。' }],
+    '咖哩': [{ name: '小日子咖哩', description: '溫暖濃郁的日式咖哩。' }],
+    '健康餐': [{ name: '拾光健康餐', description: '清爽均衡的日常餐盒。' }]
+};
+
+function getLocalFoodData() {
+    const data = JSON.parse(JSON.stringify(window.LOCAL_RESTAURANTS || LOCAL_FOOD_DATA));
+    const saved = JSON.parse(localStorage.getItem('yuntech-food-recommendations') || '[]');
+    saved.forEach(item => {
+        if (!data[item.category]) data[item.category] = [];
+        data[item.category].push({ name: item.name, description: item.description || '私藏好店！', url: item.url });
+    });
+    return data;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (location.protocol === 'file:') {
+        initApp(getLocalFoodData(), true);
+        return;
+    }
+    const isLocalPage = location.hostname === 'localhost'
+        || location.hostname === '127.0.0.1';
+    const apiUrl = isLocalPage
+        ? (location.protocol === 'file:' ? 'https://yunlinfood.pages.dev/api/restaurants' : 'restaurants.json')
+        : '/api/restaurants';
+    fetch(apiUrl)
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(data => initApp(data, true))
+        .catch(() => initApp(getLocalFoodData(), true));
+});
+
+    function initApp(foodData, isLocal) {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinButton');
+    const wheelWrapper = document.getElementById('wheelWrapper');
+    const pContainer = document.getElementById('pills-container');
+    const resultCard = document.getElementById('resultCard');
+    const resultEmoji = document.getElementById('result-emoji');
+    const resultLabel = document.getElementById('result-label');
+    const resultName = document.getElementById('result-name');
+    const resultDesc = document.getElementById('result-description');
+    const mapEmbedCard = document.getElementById('mapEmbedCard');
+    const mapIframe = document.getElementById('mapIframe');
+    const mapLoading = document.getElementById('mapLoading');
+    const mapOpenLink = document.getElementById('mapOpenLink');
+    const countDisplay = document.getElementById('count-display');
+    const modal = document.getElementById('addRestaurantModal');
+    const catSelect = document.getElementById('restaurantCategory');
+
+    let options = [];
+    let arc = 0;
+    let currentAngle = 0;
+    let isSpinning = false;
+    let rafId = null;
+    let spinTimeTotal = 0;
+    let spinTime = 0;
+    let spinAngleStart = 0;
+    const selectedCategories = new Set();
+
+    // --- Build category pills ---
+    const categories = Object.keys(foodData).sort();
+    pContainer.innerHTML = '';
+
+    const allPill = document.createElement('div');
+    allPill.className = 'pill pill-all';
+    allPill.dataset.cat = '__all__';
+    allPill.textContent = '全選';
+    pContainer.appendChild(allPill);
+
+    categories.forEach(cat => {
+        const pill = document.createElement('div');
+        pill.className = 'pill';
+        pill.dataset.cat = cat;
+        pill.textContent = (categoryEmoji[cat] || '🍽️') + ' ' + cat;
+        pContainer.appendChild(pill);
+
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        catSelect.appendChild(opt);
+    });
+
+    pContainer.addEventListener('click', e => {
+        const pill = e.target.closest('.pill');
+        if (!pill) return;
+        const cat = pill.dataset.cat;
+
+        if (cat === '__all__') {
+            const allSelected = selectedCategories.size === categories.length;
+            if (allSelected) {
+                selectedCategories.clear();
+            } else {
+                categories.forEach(c => selectedCategories.add(c));
+            }
+        } else {
+            if (selectedCategories.has(cat)) selectedCategories.delete(cat);
+            else selectedCategories.add(cat);
+        }
+        updatePillStates();
+        updateOptions();
+    });
+
+    function updatePillStates() {
+        pContainer.querySelectorAll('.pill[data-cat]').forEach(p => {
+            const cat = p.dataset.cat;
+            if (cat === '__all__') {
+                p.classList.toggle('active', selectedCategories.size === categories.length);
+            } else {
+                p.classList.toggle('active', selectedCategories.has(cat));
+            }
+        });
+    }
+
+    function updateOptions() {
+        options = [...selectedCategories].flatMap(c => foodData[c] || []);
+        arc = options.length > 0 ? (2 * Math.PI) / options.length : 0;
+        const count = options.length;
+        countDisplay.innerHTML = count > 0
+            ? `已選 <span>${count}</span> 道美食`
+            : '請先選擇分類';
+        drawWheel();
+    }
+
+    // --- Draw wheel ---
+    function drawWheel() {
+        const size = canvas.clientWidth;
+        if (size === 0) return;
+        const dpr = window.devicePixelRatio || 1;
+        const cx = size / 2, cy = size / 2;
+        const R = size / 2 * 0.88;
+        const textR = R * 0.62;
+
+        ctx.clearRect(0, 0, size, size);
+
+        if (options.length === 0) {
+            // Empty state
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, R, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,0.04)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            const fs = Math.max(14, size / 22);
+            ctx.font = `600 ${fs}px "Noto Sans TC", sans-serif`;
+            ctx.fillText('請先選擇分類', cx, cy);
+            ctx.restore();
+            spinBtn.disabled = true;
+            return;
+        }
+
+        spinBtn.disabled = isSpinning;
+
+        // Draw segments
+        let fontSize = Math.max(9, Math.floor(size / 28));
+        if (options.length > 20) fontSize = Math.max(7, Math.floor(size / 36));
+        if (options.length > 35) fontSize = Math.max(6, Math.floor(size / 46));
+
+        for (let i = 0; i < options.length; i++) {
+            const startA = currentAngle + i * arc;
+            const endA = startA + arc;
+            const [c1, c2] = COLORS[i % COLORS.length];
+
+            // Fill with gradient
+            const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+            grd.addColorStop(0, c2 + 'cc');
+            grd.addColorStop(1, c1);
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, R, startA, endA);
+            ctx.closePath();
+            ctx.fillStyle = grd;
+            ctx.fill();
+
+            // Divider
+            ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        // Outer ring
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Text
+        ctx.font = `700 ${fontSize}px "Noto Sans TC", sans-serif`;
+        for (let i = 0; i < options.length; i++) {
+            const midA = currentAngle + i * arc + arc / 2;
+            ctx.save();
+            ctx.translate(
+                cx + Math.cos(midA) * textR,
+                cy + Math.sin(midA) * textR
+            );
+            ctx.rotate(midA + Math.PI / 2);
+
+            let text = options[i].name;
+            const maxLen = Math.max(2, Math.floor(textR / fontSize * 1.1));
+            if (text.length > maxLen) text = text.slice(0, maxLen - 1) + '…';
+
+            // Text shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.fillText(text, -ctx.measureText(text).width / 2 + 1, fontSize / 2 + 1);
+            ctx.fillStyle = '#fff';
+            ctx.fillText(text, -ctx.measureText(text).width / 2, fontSize / 2);
+            ctx.restore();
+        }
+
+        // Center circle
+        const centerGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 36);
+        centerGrd.addColorStop(0, '#fff');
+        centerGrd.addColorStop(1, '#e2e8f0');
+        ctx.beginPath();
+        ctx.arc(cx, cy, 36, 0, Math.PI * 2);
+        ctx.fillStyle = centerGrd;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // --- Spin logic ---
+    function spin() {
+        if (isSpinning || options.length === 0) return;
+        isSpinning = true;
+        wheelWrapper.classList.add('spinning');
+        resultCard.classList.remove('has-result', 'animating');
+        resultName.className = '';
+        resultDesc.className = '';
+
+        spinAngleStart = Math.random() * 60 + 90;
+        spinTime = 0;
+        spinTimeTotal = Math.random() * 100 + 400;
+        rotateWheel();
+    }
+
+    function rotateWheel() {
+        spinTime += 16;
+        if (spinTime >= spinTimeTotal) { stopSpin(); return; }
+        const t = spinTime / spinTimeTotal;
+        const spinAngle = spinAngleStart * (1 - easeOut(t));
+        currentAngle += spinAngle * Math.PI / 180;
+        drawWheel();
+        rafId = requestAnimationFrame(rotateWheel);
+    }
+
+    function stopSpin() {
+        cancelAnimationFrame(rafId);
+        isSpinning = false;
+        wheelWrapper.classList.remove('spinning');
+        spinBtn.disabled = false;
+
+        const deg = (currentAngle * 180 / Math.PI + 90) % 360;
+        const segDeg = arc * 180 / Math.PI;
+        const idx = Math.floor(((360 - deg % 360) % 360) / segDeg) % options.length;
+        const selected = options[idx];
+
+        if (selected) showResult(selected);
+    }
+
+    function easeOut(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    // --- Show result ---
+    function showResult(item) {
+        const cat = [...selectedCategories].find(c =>
+            (foodData[c] || []).some(r => r.name === item.name)
+        );
+        const emoji = cat ? (categoryEmoji[cat] || '🍽️') : '🍽️';
+
+        resultEmoji.textContent = emoji;
+        resultLabel.textContent = '命定美食出爐！';
+        resultName.textContent = item.name;
+        resultName.className = '';
+        resultDesc.textContent = item.description || '去吃吧！';
+        resultDesc.className = '';
+
+        resultCard.classList.add('has-result');
+        void resultCard.offsetWidth;
+        resultCard.classList.add('animating');
+
+        spawnConfetti();
+        showMap(item);
+
+        if (window.innerWidth < 768) {
+            setTimeout(() => mapEmbedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+        }
+    }
+
+    // --- Embedded map ---
+    function showMap(item) {
+        mapEmbedCard.classList.add('visible');
+        mapIframe.style.display = 'none';
+        mapLoading.style.display = 'flex';
+
+        // Build embed URL from the item's Maps URL or fall back to name search
+        let embedSrc;
+        if (item.url && item.url.startsWith('https://maps.app.goo.gl/')) {
+            // Use place search by name as Google short links can't be embedded directly
+            embedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(item.name)}&output=embed&hl=zh-TW`;
+        } else if (item.url && item.url.includes('google.com/maps')) {
+            // Try to convert long-form URL to embed
+            embedSrc = item.url.replace('/maps/', '/maps/embed/') + '&hl=zh-TW';
+        } else {
+            embedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(item.name + ' 斗六')}&output=embed&hl=zh-TW`;
+        }
+
+        // "Open in Maps" link
+        if (item.url) {
+            mapOpenLink.href = item.url;
+            mapOpenLink.classList.remove('hidden');
+        } else {
+            mapOpenLink.href = `https://maps.google.com/maps?q=${encodeURIComponent(item.name + ' 斗六')}`;
+            mapOpenLink.classList.remove('hidden');
+        }
+
+        mapIframe.onload = () => {
+            mapLoading.style.display = 'none';
+            mapIframe.style.display = 'block';
+        };
+        mapIframe.src = embedSrc;
+    }
+
+    // --- Confetti ---
+    function spawnConfetti() {
+        const colors = ['#f97316','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4'];
+        const rect = resultCard.getBoundingClientRect();
+        for (let i = 0; i < 18; i++) {
+            const el = document.createElement('div');
+            el.className = 'confetti-piece';
+            el.style.cssText = `
+                left: ${Math.random() * 100}%;
+                top: 0;
+                background: ${colors[i % colors.length]};
+                --tx: ${(Math.random() - 0.5) * 120}px;
+                --rot: ${Math.random() * 720}deg;
+                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                animation-delay: ${Math.random() * 0.3}s;
+                animation-duration: ${0.6 + Math.random() * 0.4}s;
+            `;
+            resultCard.appendChild(el);
+            setTimeout(() => el.remove(), 1200);
+        }
+    }
+
+    // --- Canvas sizing ---
+    function resizeCanvas() {
+        const container = canvas.parentElement;
+        const size = Math.min(container.clientWidth, 500);
+        if (size === 0) return;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.style.width = `${size}px`;
+        canvas.style.height = `${size}px`;
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+        ctx.scale(dpr, dpr);
+        drawWheel();
+    }
+
+    // --- Modal ---
+    function openModal() { modal.classList.add('open'); }
+    function closeModal() { modal.classList.remove('open'); }
+
+    document.getElementById('addRestaurantBtn').addEventListener('click', openModal);
+    document.getElementById('cancelAddBtn').addEventListener('click', closeModal);
+    document.getElementById('cancelAddBtn2').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    document.getElementById('addRestaurantForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const restaurant = {
+            name: e.target.restaurantName.value.trim(),
+            description: e.target.restaurantDescription.value.trim() || '私藏好店！',
+            url: e.target.restaurantUrl.value.trim()
+        };
+        const category = e.target.restaurantCategory.value;
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '送出中…';
+
+        if (isLocal) {
+            const saved = JSON.parse(localStorage.getItem('yuntech-food-recommendations') || '[]');
+            saved.push({ ...restaurant, category });
+            localStorage.setItem('yuntech-food-recommendations', JSON.stringify(saved));
+            alert(`已儲存「${restaurant.name}」！重新整理後就能抽到它。`);
+            window.location.reload();
+            return;
+        }
+
+        fetch('/api/restaurants', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ restaurant, category })
+        })
+        .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+        .then(data => {
+            if (data.success) {
+                alert(`成功新增「${restaurant.name}」！頁面將重新整理。`);
+                window.location.reload();
+            } else throw new Error(data.message || '未知錯誤');
+        })
+        .catch(err => {
+            alert('新增失敗：' + err.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = '送出推薦';
+        });
+    });
+
+    // --- Init ---
+    spinBtn.addEventListener('click', spin);
+    window.addEventListener('resize', resizeCanvas);
+
+    requestAnimationFrame(() => {
+        resizeCanvas();
+        updateOptions();
+    });
+}
+</script>
+</body>
+</html>
