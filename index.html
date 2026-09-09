@@ -315,6 +315,34 @@
       return headers.findIndex((header) => names.some((name) => header.includes(name)));
     }
 
+    function createImportedClass(day, time, cellText) {
+      const text = cellText.replace(/\s+/g, ' ').trim();
+      if (!text) return null;
+      const room = text.match(/\(([A-Z]{2}\d{3})\)/i);
+      const course = text.match(/(?:^|\s)\d{4}\s*(.+?)(?:\s+[^\s]+老師)?$/);
+      return {
+        id: `${Date.now()}-${Math.random()}`,
+        day,
+        time,
+        name: course ? course[1].trim() : text,
+        place: room ? room[1].toUpperCase() : '未填地點',
+      };
+    }
+
+    function parseGridSchedule(rows) {
+      const headerIndex = rows.findIndex((row) => row.filter((cell) => parseScheduleDay(cell) >= 0).length >= 2);
+      if (headerIndex < 0) return [];
+      const dayColumns = rows[headerIndex].map(parseScheduleDay);
+      return rows.slice(headerIndex + 1).flatMap((row) => {
+        const time = parseScheduleTime(row[0] || '');
+        if (!time) return [];
+        return row.slice(1).map((cellText, columnIndex) => {
+          const day = dayColumns[columnIndex + 1];
+          return day >= 0 ? createImportedClass(day, time, cellText) : null;
+        }).filter(Boolean);
+      });
+    }
+
     document.getElementById('import-word-schedule').addEventListener('change', async (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -329,16 +357,16 @@
         const timeColumn = findColumn(headers, ['時間', 'time', '節次']);
         const nameColumn = findColumn(headers, ['課程', '科目', '名稱', 'course', 'subject']);
         const placeColumn = findColumn(headers, ['地點', '教室', '上課', 'room', 'place']);
-        if ([dayColumn, timeColumn, nameColumn, placeColumn].some((column) => column < 0)) {
-          throw new Error('找不到星期、時間、課程或地點欄位');
+        let importedClasses;
+        if ([dayColumn, timeColumn, nameColumn, placeColumn].every((column) => column >= 0)) {
+          importedClasses = rows.slice(1).map((row) => createImportedClass(
+            parseScheduleDay(row[dayColumn] || ''),
+            parseScheduleTime(row[timeColumn] || ''),
+            `${row[nameColumn] || ''}\n${row[placeColumn] || ''}`,
+          )).filter((item) => item && item.day >= 0 && item.time && item.name);
+        } else {
+          importedClasses = parseGridSchedule(rows);
         }
-        const importedClasses = rows.slice(1).map((row) => ({
-          id: `${Date.now()}-${Math.random()}`,
-          day: parseScheduleDay(row[dayColumn] || ''),
-          time: parseScheduleTime(row[timeColumn] || ''),
-          name: row[nameColumn] || '',
-          place: row[placeColumn] || '',
-        })).filter((item) => item.day >= 0 && item.time && item.name && item.place);
         if (!importedClasses.length) throw new Error('沒有辨識到有效課程');
         saveClasses([...loadClasses(), ...importedClasses]);
         renderClasses();
