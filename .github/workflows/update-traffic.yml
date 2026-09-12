@@ -27,6 +27,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add traffic.json library-hours.json
+          git add library-hours.json
+          git add traffic.json 2>/dev/null || true
           git diff --cached --quiet || git commit -m "Update traffic data"
           git push
