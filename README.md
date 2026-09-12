@@ -1,2 +1,0 @@
-# YunTech_dormitory_web
-YunTech_dormitory_web
