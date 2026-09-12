@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="宿舍生活資訊：垃圾車時間、公共設施與各處室連結。">
+  <title>宿舍生活資訊</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="logo" href="#top">宿舍生活資訊</a>
+      <div class="topbar-actions">
+        <span class="today" id="today">載入日期中...</span>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切換夜間模式">夜間</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="top">
+    <section class="intro">
+      <p class="label">DORM INFORMATION</p>
+      <h1>宿舍生活資訊</h1>
+    </section>
+
+    <section class="garbage-panel" aria-labelledby="garbage-title">
+      <div class="panel-title">
+        <div>
+          <p class="label">NEXT SCHEDULE</p>
+          <h2 id="garbage-title">倒垃圾時間</h2>
+        </div>
+        <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="garbage-content">
+        <div>
+          <p class="big-time" id="countdown">計算中...</p>
+          <p class="countdown-note" id="countdown-note">垃圾車每週一至六到達</p>
+        </div>
+        <div class="schedule-details">
+          <p><strong>垃圾車位置</strong>BC 棟宿舍間</p>
+          <p><strong>到達時間</strong>17:10 ~ 17:15</p>
+          <p><strong>垃圾日</strong>每週一至六</p>
+          <p><strong>回收日</strong>每週一、三、五</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="waste-section" aria-labelledby="waste-title">
+      <div class="section-heading">
+        <p class="label">SORTING GUIDE</p>
+        <h2 id="waste-title">垃圾分類提醒</h2>
+      </div>
+      <div class="waste-grid">
+        <article class="waste-card"><span class="waste-icon">一般</span><h3>一般垃圾</h3><p>不可回收物，請綁好垃圾袋。</p></article>
+        <article class="waste-card"><span class="waste-icon">回收</span><h3>資源回收</h3><p>瓶罐、紙類請清潔後分類。</p></article>
+        <article class="waste-card"><span class="waste-icon">廚餘</span><h3>廚餘</h3><p>瀝乾湯汁後倒入指定廚餘桶。</p></article>
+      </div>
+    </section>
+
+    <section class="schedule-section" aria-labelledby="schedule-title">
+      <div class="section-heading schedule-heading">
+        <div>
+          <p class="label">TODAY'S ORBIT</p>
+          <h2 id="schedule-title">今日課表</h2>
+        </div>
+        <button class="schedule-action" id="schedule-editor" type="button">編輯課表</button>
+      </div>
+      <div class="class-list" id="class-list" aria-live="polite"></div>
+    </section>
+
+    <section class="info-section" aria-labelledby="facilities-title">
+      <div class="section-heading">
+        <p class="label">FACILITIES</p>
+        <h2 id="facilities-title">宿舍設施</h2>
+      </div>
+      <div class="info-grid">
+        <article class="info-card"><span class="info-icon">網路</span><h3>今日流量(校園流量管理網炸了所以讀不到)</h3><strong id="traffic-total">讀取中...</strong></article>
+        <article class="info-card"><span class="info-icon">電力</span><h3>每日自動熄燈</h3><strong>24:00 ~ 07:00</strong></article>
+        <article class="info-card"><span class="info-icon">熱水</span><h3>每日熱水時間</h3><strong>18:00 ~ 01:00</strong></article>
+        <article class="info-card"><span class="info-icon">飲水</span><h3>飲水機位置</h3><strong>1F、4F</strong></article>
+        <article class="info-card"><span class="info-icon">洗衣</span><h3>洗／烘衣機位置</h3><strong>C2 棟 1F</strong><a class="traffic-link" href="https://route.uy-iot.ai/artemis/monitor/WbEyR" target="_blank" rel="noopener noreferrer">查看洗衣機狀況 ↗</a></article>
+        <article class="info-card"><span class="info-icon">圖書館</span><h3>圖書館資訊</h3><strong id="library-hours">讀取中...</strong><a class="traffic-link" href="https://www.lib.yuntech.edu.tw/wSite/mp" target="_blank" rel="noopener noreferrer">前往圖書館 ↗</a></article>
+        <article class="info-card"><span class="info-icon">郵寄中心</span><h3>郵寄中心資訊</h3><strong>開放時間 09:00~12:00,13:00~13:30,14:30~18:00</strong><a class="traffic-link" href="https://mailcenter.yuntech.edu.tw/" target="_blank" rel="noopener noreferrer">前往郵寄中心 ↗</a></article>
+      </div>
+    </section>
+
+    <section class="notice-section" aria-labelledby="notice-title">
+      <div class="section-heading">
+        <p class="label">IMPORTANT</p>
+        <h2 id="notice-title">宿舍公告資訊</h2>
+      </div>
+      <a class="notice-link" href="https://sdc.yuntech.edu.tw/" target="_blank" rel="noopener noreferrer">
+        <span>宿舍生活點滴網</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+
+    <section class="links-section" aria-label="各處室連結">
+      <div class="office-links" id="office-list">
+        <a class="main-links-button" href="office-links.html">各處室連結</a>
+      </div>
+      <div class="office-links common-links-entry" aria-label="常用網站連結">
+        <a class="main-links-button" href="common-links.html">常用網站連結</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">宿舍生活資訊 · 請依實際公告更新</footer>
+
+  <dialog class="schedule-dialog" id="schedule-dialog" aria-labelledby="schedule-dialog-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="label">CLASS PLANNER</p>
+        <h2 id="schedule-dialog-title">編輯課表</h2>
+      </div>
+      <button class="dialog-close" id="schedule-close" type="button" aria-label="關閉">×</button>
+    </div>
+    <form class="class-form" id="class-form">
+      <label>星期<select id="class-day" required><option value="1">週一</option><option value="2">週二</option><option value="3">週三</option><option value="4">週四</option><option value="5">週五</option><option value="6">週六</option><option value="0">週日</option></select></label>
+      <label>開始時間<input id="class-time" type="time" required></label>
+      <label>課程名稱<input id="class-name" type="text" maxlength="40" required></label>
+      <label>上課地點<input id="class-place" type="text" maxlength="40" required></label>
+      <button class="schedule-save" type="submit">新增課程</button>
+    </form>
+    <div class="schedule-backup">
+      <button class="backup-button" id="export-schedule" type="button">下載課表備份</button>
+      <label class="backup-button" for="import-schedule">匯入課表備份<input id="import-schedule" type="file" accept="application/json,.json"></label>
+      <label class="backup-button" for="import-word-schedule">Word 轉課表<input id="import-word-schedule" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+    </div>
+    <div class="all-classes" id="all-classes"></div>
+  </dialog>
+
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script>
+    const weekdayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+    const recyclingDays = [1, 3, 5];
+    const garbageDays = [1, 2, 3, 4, 5, 6];
+
+    function getNextGarbage(now) {
+      for (let offset = 0; offset <= 7; offset += 1) {
+        const date = new Date(now);
+        date.setDate(now.getDate() + offset);
+        if (garbageDays.includes(date.getDay())) {
+          date.setHours(17, 10, 0, 0);
+          if (date > now) return date;
+        }
+      }
+      return null;
+    }
+
+    function updateGarbageInfo() {
+      const now = new Date();
+      const today = document.getElementById('today');
+      const countdown = document.getElementById('countdown');
+      const note = document.getElementById('countdown-note');
+      const statusDot = document.getElementById('status-dot');
+      today.textContent = `${now.getFullYear()} / ${now.getMonth() + 1} / ${now.getDate()} ${weekdayNames[now.getDay()]}`;
+      const minutesSinceStart = (now.getHours() * 60 + now.getMinutes()) - (17 * 60 + 10);
+      const isGarbageDay = garbageDays.includes(now.getDay());
+      if (isGarbageDay && minutesSinceStart >= 0 && minutesSinceStart < 5) {
+        countdown.textContent = '垃圾車目前停留中';
+        note.textContent = '請到 BC 棟宿舍間倒垃圾';
+        statusDot.className = 'status-dot active';
+        return;
+      }
+      const next = getNextGarbage(now);
+      const totalSeconds = Math.max(0, Math.ceil((next - now) / 1000));
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      countdown.textContent = `還有 ${hours}:${minutes}:${seconds}`;
+      note.textContent = `${weekdayNames[next.getDay()]} 17:10 到達 BC 棟宿舍間${recyclingDays.includes(next.getDay()) ? ' · 今天可以回收' : ''}`;
+      statusDot.className = totalSeconds <= 1800 ? 'status-dot soon' : 'status-dot';
+    }
+
+    updateGarbageInfo();
+    setInterval(updateGarbageInfo, 1000);
+
+    const themeToggle = document.getElementById('theme-toggle');
+    function updateThemeButton() {
+      const isNight = document.body.classList.contains('night-mode');
+      themeToggle.textContent = isNight ? '日間' : '夜間';
+      themeToggle.setAttribute('aria-label', isNight ? '切換日間模式' : '切換夜間模式');
+    }
+
+    if (localStorage.getItem('dorm-theme') === 'night') document.body.classList.add('night-mode');
+    updateThemeButton();
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('night-mode');
+      localStorage.setItem('dorm-theme', document.body.classList.contains('night-mode') ? 'night' : 'day');
+      updateThemeButton();
+    });
+
+    const trafficTotal = document.getElementById('traffic-total');
+    const trafficApi = './traffic.json';
+    async function updateTrafficMonitor() {
+      try {
+        const response = await fetch(`${trafficApi}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error('API unavailable');
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.error);
+        trafficTotal.textContent = `今日流量 ${data.total_gb.toFixed(2)} GB / 12 GB`;
+      } catch (error) {
+        trafficTotal.textContent = '今日流量讀取中 / 12 GB';
+      }
+    }
+    updateTrafficMonitor();
+    setInterval(updateTrafficMonitor, 60000);
+
+    const libraryHours = document.getElementById('library-hours');
+    const libraryApi = './library-hours.json';
+    async function updateLibraryHours() {
+      try {
+        const response = await fetch(`${libraryApi}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error('API unavailable');
+        const data = await response.json();
+        libraryHours.textContent = data.ok ? `今日開放 ${data.hours}` : '今日開放時間讀取失敗';
+      } catch {
+        libraryHours.textContent = '今日開放時間讀取失敗';
+      }
+    }
+    updateLibraryHours();
+    setInterval(updateLibraryHours, 600000);
+
+    const scheduleStorageKey = 'dorm-class-schedule';
+    const dayNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+    const classList = document.getElementById('class-list');
+    const allClasses = document.getElementById('all-classes');
+    const scheduleDialog = document.getElementById('schedule-dialog');
+    const classForm = document.getElementById('class-form');
+
+    function loadClasses() {
+      try {
+        const savedClasses = JSON.parse(localStorage.getItem(scheduleStorageKey) || '[]');
+        return Array.isArray(savedClasses) ? savedClasses : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveClasses(classes) {
+      localStorage.setItem(scheduleStorageKey, JSON.stringify(classes));
+    }
+
+    function classRow(item, removable) {
+      const deleteButton = removable ? `<button class="class-delete" type="button" data-class-id="${item.id}">刪除</button>` : '';
+      return `<article class="class-row"><time>${item.time}</time><div><strong>${item.name}</strong><span>${item.place}</span></div>${deleteButton}</article>`;
+    }
+
+    function renderClasses() {
+      const classes = loadClasses().sort((first, second) => first.day - second.day || first.time.localeCompare(second.time));
+      const todayClasses = classes.filter((item) => item.day === new Date().getDay());
+      classList.innerHTML = todayClasses.length
+        ? todayClasses.map((item) => classRow(item, false)).join('')
+        : '<p class="schedule-empty">今天沒有課，享受自己的時間。</p>';
+      allClasses.innerHTML = classes.length
+        ? classes.map((item) => `<div class="all-class-row"><span>${dayNames[item.day]} ${item.time} · ${item.name} · ${item.place}</span>${classRow(item, true).match(/<button.*<\/button>/)[0]}</div>`).join('')
+        : '<p class="schedule-empty">尚未加入課程。</p>';
+    }
+
+    document.getElementById('schedule-editor').addEventListener('click', () => scheduleDialog.showModal());
+    document.getElementById('schedule-close').addEventListener('click', () => scheduleDialog.close());
+    classForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const classes = loadClasses();
+      classes.push({
+        id: `${Date.now()}-${Math.random()}`,
+        day: Number(document.getElementById('class-day').value),
+        time: document.getElementById('class-time').value,
+        name: document.getElementById('class-name').value.trim(),
+        place: document.getElementById('class-place').value.trim(),
+      });
+      saveClasses(classes);
+      classForm.reset();
+      renderClasses();
+    });
+    allClasses.addEventListener('click', (event) => {
+      const button = event.target.closest('.class-delete');
+      if (!button) return;
+      saveClasses(loadClasses().filter((item) => item.id !== button.dataset.classId));
+      renderClasses();
+    });
+    document.getElementById('export-schedule').addEventListener('click', () => {
+      const backup = new Blob([JSON.stringify(loadClasses(), null, 2)], { type: 'application/json' });
+      const download = document.createElement('a');
+      download.href = URL.createObjectURL(backup);
+      download.download = `宿舍課表備份-${new Date().toISOString().slice(0, 10)}.json`;
+      download.click();
+      URL.revokeObjectURL(download.href);
+    });
+    document.getElementById('import-schedule').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const importedClasses = JSON.parse(reader.result);
+          if (!Array.isArray(importedClasses) || importedClasses.some((item) => !item.day || !item.time || !item.name || !item.place)) throw new Error('格式錯誤');
+          saveClasses(importedClasses);
+          renderClasses();
+        } catch {
+          window.alert('課表備份格式無法讀取。');
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    function parseScheduleDay(value) {
+      const text = value.trim().toLowerCase().replace(/星期|週/g, '');
+      const day = text.match(/^([日一二三四五六])/);
+      if (day) return ['日', '一', '二', '三', '四', '五', '六'].indexOf(day[1]);
+      const englishDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].findIndex((name) => text.startsWith(name));
+      if (englishDay >= 0) return englishDay;
+      const number = Number(text);
+      return Number.isInteger(number) && number >= 0 && number <= 6 ? number : -1;
+    }
+
+    function parseScheduleTime(value) {
+      const match = value.match(/(?:上午|下午|早上|晚上)?\s*(\d{1,2})[:：](\d{2})/);
+      if (!match) return '';
+      let hour = Number(match[1]);
+      if (/下午|晚上/.test(value) && hour < 12) hour += 12;
+      return `${String(hour).padStart(2, '0')}:${match[2]}`;
+    }
+
+    function findColumn(headers, names) {
+      return headers.findIndex((header) => names.some((name) => header.includes(name)));
+    }
+
+    function createImportedClass(day, time, cellText) {
+      const text = cellText.replace(/\s+/g, ' ').trim();
+      if (!text) return null;
+      const room = text.match(/\(([A-Z]{2}\d{3})\)/i);
+      const course = text.match(/(?:^|\s)\d{4}\s*(.+?)(?:\s+[^\s]+老師)?$/);
+      return {
+        id: `${Date.now()}-${Math.random()}`,
+        day,
+        time,
+        name: course ? course[1].trim() : text,
+        place: room ? room[1].toUpperCase() : '未填地點',
+      };
+    }
+
+    function parseGridSchedule(rows) {
+      const headerIndex = rows.findIndex((row) => row.filter((cell) => parseScheduleDay(cell) >= 0).length >= 2);
+      if (headerIndex < 0) return [];
+      const dayColumns = rows[headerIndex].map(parseScheduleDay);
+      return rows.slice(headerIndex + 1).flatMap((row) => {
+        const time = parseScheduleTime(row[0] || '');
+        if (!time) return [];
+        return row.slice(1).map((cellText, columnIndex) => {
+          const day = dayColumns[columnIndex + 1];
+          return day >= 0 ? createImportedClass(day, time, cellText) : null;
+        }).filter(Boolean);
+      });
+    }
+
+    document.getElementById('import-word-schedule').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const result = await mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+        const table = new DOMParser().parseFromString(result.value, 'text/html').querySelector('table');
+        if (!table) throw new Error('找不到表格');
+        const rows = [...table.rows].map((row) => [...row.cells].map((cell) => cell.textContent.trim()));
+        if (rows.length < 2) throw new Error('表格沒有課程資料');
+        const headers = rows[0].map((header) => header.toLowerCase());
+        const dayColumn = findColumn(headers, ['星期', '週', 'day']);
+        const timeColumn = findColumn(headers, ['時間', 'time', '節次']);
+        const nameColumn = findColumn(headers, ['課程', '科目', '名稱', 'course', 'subject']);
+        const placeColumn = findColumn(headers, ['地點', '教室', '上課', 'room', 'place']);
+        let importedClasses;
+        if ([dayColumn, timeColumn, nameColumn, placeColumn].every((column) => column >= 0)) {
+          importedClasses = rows.slice(1).map((row) => createImportedClass(
+            parseScheduleDay(row[dayColumn] || ''),
+            parseScheduleTime(row[timeColumn] || ''),
+            `${row[nameColumn] || ''}\n${row[placeColumn] || ''}`,
+          )).filter((item) => item && item.day >= 0 && item.time && item.name);
+        } else {
+          importedClasses = parseGridSchedule(rows);
+        }
+        if (!importedClasses.length) throw new Error('沒有辨識到有效課程');
+        saveClasses([...loadClasses(), ...importedClasses]);
+        renderClasses();
+        window.alert(`已從 Word 匯入 ${importedClasses.length} 門課程。`);
+      } catch (error) {
+        window.alert(`Word 課表無法轉換：${error.message}`);
+      }
+      event.target.value = '';
+    });
+    renderClasses();
+  </script>
+</body>
+</html>
